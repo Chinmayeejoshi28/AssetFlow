@@ -45,11 +45,3 @@ The Investment Portal is a web-based platform that allows users to manage their 
    
 4. Push changes and create a pull request.
 
-## License
-This project is licensed under the MIT License. See LICENSE for details.
-
-## Team Engineer
-1. Yash Shivlal Purbhe
-2. Dipshree Atul Vartak
-3. Aditya Rajendra Kokate
-4. Neha Sunil Kamble
