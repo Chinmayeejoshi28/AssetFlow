@@ -1,0 +1,982 @@
+:root {
+    --primary-color: #6c5ce7;
+    --secondary-color: #a29bfe;
+    --background-dark: #f0f2f5;
+    --card-background: #ffffff;
+    --text-light: #000000;
+    --text-muted: #666666;
+    --green: #00b894;
+    --red: #ff7675;
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: var(--card-background);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+}
+
+.logo h1 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+nav a {
+    color: var(--text-light);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+nav a.active {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+nav a:hover {
+    background-color: rgba(108, 92, 231, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+#loginBtn, #logoutBtn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#loginBtn:hover, #logoutBtn:hover {
+    background-color: var(--secondary-color);
+}
+
+.dashboard-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Market Summary Section */
+.market-summary-section {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+}
+
+.market-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.market-box {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.market-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+.market-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.market-header h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.market-badge {
+    background-color: rgba(108, 92, 231, 0.1);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.market-value {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.market-change {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.market-change.positive {
+    color: var(--green);
+}
+
+.market-change.negative {
+    color: var(--red);
+}
+
+.market-chart {
+    height: 60px;
+    margin-top: 1rem;
+}
+
+/* Stocks Section */
+.stocks-section {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.refresh-control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#lastUpdated {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.refresh-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+    background-color: rgba(108, 92, 231, 0.1);
+    transform: rotate(180deg);
+}
+
+.stocks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 0.5rem;
+}
+
+/* Stock Box Styles */
+.stock-box {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.stock-box.up {
+    border-left-color: var(--green);
+}
+
+.stock-box.down {
+    border-left-color: var(--red);
+}
+
+.stock-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+.stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.stock-symbol {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.stock-exchange {
+    background-color: rgba(108, 92, 231, 0.1);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.stock-company {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.stock-price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.stock-change {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.stock-change.up {
+    background-color: rgba(0, 184, 148, 0.1);
+    color: var(--green);
+}
+
+.stock-change.down {
+    background-color: rgba(255, 118, 117, 0.1);
+    color: var(--red);
+}
+
+.stock-chart {
+    height: 60px;
+    margin: 1rem 0;
+}
+
+.view-details {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.view-details:hover {
+    text-decoration: underline;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--card-background);
+    margin: 15% auto;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: var(--hover-shadow);
+}
+
+.close {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.auth-tab {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+}
+
+.auth-tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.auth-form input {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.auth-form button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.auth-form button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .dashboard-content {
+        padding: 1rem;
+    }
+
+    .market-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stocks-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .market-box, .stock-box {
+        padding: 1rem;
+    }
+
+    .portfolio-value {
+        display: none; /* Hide portfolio value on mobile */
+    }
+    
+    .user-profile-menu {
+        gap: 0.5rem;
+    }
+    
+    #username {
+        display: none; /* Hide username on mobile */
+    }
+}
+
+/* Trading Page Specific Styles */
+.trading-content {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.trading-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.account-info {
+    display: flex;
+    gap: 2rem;
+}
+
+.account-balance, .account-value {
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.trading-panels {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    gap: 2rem;
+}
+
+/* Stock Selection Panel */
+.stock-selection-panel {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.search-container button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-container button:hover {
+    background-color: var(--secondary-color);
+}
+
+.stock-result {
+    background-color: var(--background-dark);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    min-height: 100px;
+}
+
+.stock-result .placeholder {
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.recent-stocks, .portfolio-quick-select {
+    margin-top: 2rem;
+}
+
+.recent-list, .portfolio-list {
+    margin-top: 1rem;
+}
+
+/* Trading Order Panel */
+.trading-order-panel {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.trade-type {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.trade-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.trade-btn[data-type="buy"] {
+    background-color: var(--green);
+    color: white;
+}
+
+.trade-btn[data-type="sell"] {
+    background-color: var(--red);
+    color: white;
+}
+
+.trade-btn.active {
+    transform: scale(0.98);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.selected-stock-info {
+    background-color: var(--background-dark);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.trade-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.order-summary {
+    background-color: var(--background-dark);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+#placeOrderBtn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#placeOrderBtn:disabled {
+    background-color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+#placeOrderBtn:not(:disabled):hover {
+    background-color: var(--secondary-color);
+}
+
+/* Order History Panel */
+.order-history-panel {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.order-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Responsive Design for Trading Page */
+@media (max-width: 1200px) {
+    .trading-panels {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .order-history-panel {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .trading-content {
+        padding: 1rem;
+    }
+    
+    .trading-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .account-info {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .trading-panels {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .order-history-panel {
+        grid-column: auto;
+    }
+    
+    .trade-type {
+        flex-direction: column;
+    }
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    color: white;
+    animation: slideIn 0.3s ease-out;
+    z-index: 1000;
+}
+
+.notification.success {
+    background-color: var(--green);
+}
+
+.notification.error {
+    background-color: var(--red);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Enhanced User Profile Styles */
+.user-profile-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.5rem;
+    position: relative;
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.5rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.1) 0%, rgba(162, 155, 254, 0.1) 100%);
+}
+
+.profile-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.15);
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.15) 0%, rgba(162, 155, 254, 0.15) 100%);
+}
+
+.profile-avatar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+}
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.2);
+}
+
+.profile-avatar i {
+    transition: transform 0.3s ease;
+}
+
+.profile-link:hover .profile-avatar i {
+    transform: scale(1.1);
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #00b894;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#username {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #2d3748;
+}
+
+.profile-dropdown i {
+    font-size: 0.8rem;
+    color: #718096;
+    transition: transform 0.3s ease;
+}
+
+.profile-link:hover .profile-dropdown i {
+    transform: translateY(2px);
+}
+
+/* Enhanced Auth Buttons */
+.auth-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.auth-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.2);
+}
+
+.logout-btn {
+    background: var(--gradient-danger);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.3);
+}
+
+.auth-btn i {
+    font-size: 1rem;
+}
+
+/* Animation for status indicator */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 184, 148, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 184, 148, 0);
+    }
+}
+
+.status-indicator {
+    animation: pulse 2s infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-dropdown span {
+        display: none;
+    }
+    
+    .auth-btn span {
+        display: none;
+    }
+    
+    .auth-btn {
+        padding: 0.6rem;
+    }
+    
+    .profile-avatar {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+}
+
+/* Optional: Add a subtle animation when the page loads */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-profile-menu {
+    animation: fadeInDown 0.5s ease-out;
+}
+
+/* User Role Badge */
+.user-role {
+    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    box-shadow: 0 2px 4px rgba(108, 92, 231, 0.2);
+}
+
+.user-initials {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Profile Dropdown Enhancements */
+.profile-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.profile-dropdown:hover {
+    background: rgba(108, 92, 231, 0.1);
+}
+
+/* Status Indicator Colors */
+.status-indicator {
+    background: #00b894; /* Online */
+}
+
+.logged-out .status-indicator {
+    background: #b2bec3; /* Offline */
+}
+
+/* Animation for login/logout transition */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.user-role {
+    animation: slideIn 0.3s ease-out;
+} 

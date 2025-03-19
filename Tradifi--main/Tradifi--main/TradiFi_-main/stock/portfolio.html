@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Portfolio - StockTrader</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --gradient-primary: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            --gradient-success: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            --gradient-danger: linear-gradient(135deg, #ff6b6b 0%, #ff7675 100%);
+            --gradient-warning: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+            --border-radius-lg: 16px;
+            --border-radius-sm: 8px;
+        }
+
+        .portfolio-container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        /* User Profile Sidebar */
+        .profile-sidebar {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+            height: fit-content;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fe;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        /* Main Content Area */
+        .portfolio-content {
+            display: grid;
+            gap: 2rem;
+        }
+
+        /* Wallet Section */
+        .wallet-section {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+        }
+
+        .wallet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .wallet-balance {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .wallet-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .wallet-card {
+            background: var(--gradient-primary);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-lg);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wallet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,...') center/cover no-repeat;
+            opacity: 0.1;
+        }
+
+        /* Holdings Section */
+        .holdings-section {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+        }
+
+        .holdings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .holdings-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .holding-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fe;
+            border-radius: var(--border-radius-sm);
+            transition: transform 0.3s ease;
+        }
+
+        .holding-item:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Activity Section */
+        .activity-section {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+        }
+
+        .activity-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fe;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .activity-buy {
+            background: var(--gradient-success);
+        }
+
+        .activity-sell {
+            background: var(--gradient-danger);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .portfolio-container {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                position: sticky;
+                top: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .portfolio-container {
+                padding: 0 1rem;
+            }
+
+            .wallet-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- Keep your existing header -->
+    </header>
+
+    <div class="portfolio-container">
+        <!-- Profile Sidebar -->
+        <aside class="profile-sidebar">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">JD</div>
+                <h2 class="profile-name" id="profileName">John Doe</h2>
+                <p class="profile-email" id="profileEmail">john.doe@example.com</p>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalTrades">5</div>
+                    <div class="stat-label">Total Trades</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="successRate">20%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+            <button class="edit-profile-btn">Edit Profile</button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="portfolio-content">
+            <!-- Wallet Section -->
+            <section class="wallet-section">
+                <div class="wallet-header">
+                    <h2>Your Wallet</h2>
+                    <div class="wallet-balance" id="totalBalance">$0.00</div>
+                </div>
+                <div class="wallet-cards">
+                    <div class="wallet-card">
+                        <h3>Available Cash</h3>
+                        <div class="card-balance" id="availableCash">$0.00</div>
+                        <p>Available for trading</p>
+                    </div>
+                    <div class="wallet-card">
+                        <h3>Invested Amount</h3>
+                        <div class="card-balance" id="investedAmount">$0.00</div>
+                        <p>Current market value</p>
+                    </div>
+                    <div class="wallet-card">
+                        <h3>Total Returns</h3>
+                        <div class="card-balance" id="totalReturns">$0.00</div>
+                        <p>Overall profit/loss</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Holdings Section -->
+            <section class="holdings-section">
+                <div class="holdings-header">
+                    <h2>Your Holdings</h2>
+                    <button class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="holdings-grid" id="holdingsGrid">
+                    <!-- Holdings will be populated here -->
+                </div>
+            </section>
+
+            <!-- Recent Activity Section -->
+            <section class="activity-section">
+                <div class="activity-header">
+                    <h2>Recent Activity</h2>
+                </div>
+                <div class="activity-list" id="activityList">
+                    <!-- Activities will be populated here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Load user data
+            function loadUserData() {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+                // Update profile information
+                document.getElementById('profileName').textContent = user.name || 'Yash';
+                document.getElementById('profileEmail').textContent = user.email || 'Yash@example.com';
+                document.getElementById('profileAvatar').textContent = getInitials(user.name || 'Yash');
+
+                // Add additional user information
+                if (user.name) {
+                    const userInfoHTML = `
+                        <div class="profile-info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Account Type</span>
+                                <span class="info-value">${user.accountDetails?.accountType || 'Standard'}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Status</span>
+                                <span class="info-value ${user.accountDetails?.verificationStatus.toLowerCase()}">${user.accountDetails?.verificationStatus}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Member Since</span>
+                                <span class="info-value">${new Date(user.joinDate).toLocaleDateString()}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Risk Level</span>
+                                <span class="info-value">${user.tradingPreferences?.riskLevel}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Last Login</span>
+                                <span class="info-value">${new Date(user.lastLogin).toLocaleString()}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Login Count</span>
+                                <span class="info-value">${user.loginCount || 1}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    // Insert after profile stats
+                    const profileStats = document.querySelector('.profile-stats');
+                    profileStats.insertAdjacentHTML('afterend', userInfoHTML);
+                }
+            }
+
+            // Load wallet data
+            function loadWalletData() {
+                const cash = parseFloat(localStorage.getItem('userCash') || '10000');
+                const portfolio = JSON.parse(localStorage.getItem('portfolio') || '[]');
+
+                let investedAmount = 0;
+                let currentValue = 0;
+
+                portfolio.forEach(position => {
+                    investedAmount += position.totalCost;
+                    currentValue += position.quantity * position.averagePrice;
+                });
+
+                const totalReturns = currentValue - investedAmount;
+
+                document.getElementById('availableCash').textContent = formatCurrency(cash);
+                document.getElementById('investedAmount').textContent = formatCurrency(investedAmount);
+                document.getElementById('totalReturns').textContent = formatCurrency(totalReturns);
+                document.getElementById('totalBalance').textContent = formatCurrency(cash + currentValue);
+            }
+
+            // Load holdings
+            function loadHoldings() {
+                const portfolio = JSON.parse(localStorage.getItem('portfolio') || '[]');
+                const holdingsGrid = document.getElementById('holdingsGrid');
+
+                if (portfolio.length === 0) {
+                    holdingsGrid.innerHTML = `
+                        <div class="no-holdings">
+                            <p>You don't have any holdings yet.</p>
+                            <a href="trading.html" class="start-trading-btn">Start Trading</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                holdingsGrid.innerHTML = portfolio.map(position => `
+                    <div class="holding-item">
+                        <div class="holding-info">
+                            <h3>${position.symbol}</h3>
+                            <p>${position.name}</p>
+                        </div>
+                        <div class="holding-quantity">${position.quantity} shares</div>
+                        <div class="holding-value">${formatCurrency(position.quantity * position.averagePrice)}</div>
+                        <div class="holding-change ${position.profit >= 0 ? 'positive' : 'negative'}">
+                            ${formatCurrency(position.profit || 0)}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Load recent activity
+            function loadActivity() {
+                const transactions = JSON.parse(localStorage.getItem('tradeHistory') || '[]');
+                const activityList = document.getElementById('activityList');
+
+                if (transactions.length === 0) {
+                    activityList.innerHTML = `
+                        <div class="no-activity">
+                            <p>No recent activity</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                activityList.innerHTML = transactions.slice(0, 5).map(transaction => `
+                    <div class="activity-item">
+                        <div class="activity-icon activity-${transaction.action}">
+                            <i class="fas fa-${transaction.action === 'buy' ? 'arrow-down' : 'arrow-up'}"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>${transaction.action.toUpperCase()} ${transaction.symbol}</h4>
+                            <p>${transaction.quantity} shares @ ${formatCurrency(transaction.price)}</p>
+                        </div>
+                        <div class="activity-time">
+                            ${formatDate(transaction.date)}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Utility functions
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(amount);
+            }
+
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString() + ' ' +
+                    date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            function getInitials(name) {
+                return name.split(' ').map(n => n[0]).join('').toUpperCase();
+            }
+
+            // Initialize
+            loadUserData();
+            loadWalletData();
+            loadHoldings();
+            loadActivity();
+
+            // Refresh button handler
+            document.querySelector('.refresh-btn').addEventListener('click', function () {
+                loadWalletData();
+                loadHoldings();
+                loadActivity();
+                this.classList.add('spinning');
+                setTimeout(() => this.classList.remove('spinning'), 1000);
+            });
+        });
+    </script>
+</body>
+
+</html>

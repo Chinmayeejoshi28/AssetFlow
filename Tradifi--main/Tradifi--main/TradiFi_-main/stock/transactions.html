@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - TradiFi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --gradient-primary: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            --gradient-success: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            --gradient-danger: linear-gradient(135deg, #ff6b6b 0%, #ff7675 100%);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+            --border-radius-lg: 16px;
+            --border-radius-sm: 8px;
+        }
+
+        body {
+            background: #f8f9fe;
+            min-height: 100vh;
+        }
+
+        .transactions-container {
+            max-width: 1300px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .transactions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .transactions-header h2 {
+            font-size: 1.8rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-select {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius-sm);
+            border: 2px solid #edf2f7;
+            background-color: white;
+            font-size: 0.95rem;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236c5ce7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 1em;
+            padding-right: 2.5rem;
+        }
+
+        .filter-select:hover {
+            border-color: #6c5ce7;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.1);
+        }
+
+        .transactions-table {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .transactions-table:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .transactions-table table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .transactions-table th {
+            background: #f8f9fe;
+            padding: 1.2rem 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        .transactions-table td {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #edf2f7;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        .transactions-table tr:hover {
+            background-color: #f8f9fe;
+        }
+
+        .transaction-type {
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .transaction-buy {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .transaction-sell {
+            background: var(--gradient-danger);
+            color: white;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .transaction-profit {
+            color: #00b894;
+            font-weight: 600;
+        }
+
+        .transaction-loss {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+        .no-transactions {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .no-transactions i {
+            font-size: 3rem;
+            color: #a0aec0;
+            margin-bottom: 1rem;
+        }
+
+        .no-transactions p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .pagination button {
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            background: white;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #6c5ce7;
+        }
+
+        .pagination button.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        /* Animation for table rows */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .transactions-table tr {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* Responsive design improvements */
+        @media (max-width: 1024px) {
+            .transactions-container {
+                padding: 0 1rem;
+            }
+
+            .transactions-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .filter-controls {
+                flex-wrap: wrap;
+            }
+
+            .filter-select {
+                flex: 1;
+                min-width: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .transactions-table {
+                overflow-x: auto;
+            }
+
+            .transactions-table table {
+                min-width: 800px;
+            }
+        }
+
+        /* Add these new styles for enhanced visual effects */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .trend-up {
+            color: #00b894;
+        }
+
+        .trend-down {
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>TradiFi</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="transactions.html" class="active">Transactions</a></li>
+                <li><a href="trading.html">Trade</a></li>
+            </ul>
+        </nav>
+        <div class="user-info">
+            <div class="portfolio-value">
+                <span class="label">Portfolio Value:</span>
+                <span class="value" id="portfolioValue">$0.00</span>
+            </div>
+            <span id="username">Guest User</span>
+        </div>
+    </header>
+
+    <div class="transactions-container">
+        <div class="transactions-header">
+            <h2>Transaction History</h2>
+            <div class="filter-controls">
+                <select id="typeFilter" class="filter-select">
+                    <option value="all">All Types</option>
+                    <option value="buy">Buy</option>
+                    <option value="sell">Sell</option>
+                </select>
+                <select id="timeFilter" class="filter-select">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="year">This Year</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats-summary">
+            <div class="stat-card">
+                <div class="stat-label">Total Transactions</div>
+                <div class="stat-value" id="totalTransactions">0</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>12% from last month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Profit/Loss</div>
+                <div class="stat-value" id="totalProfitLoss">$0.00</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Trading Performance</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Most Traded Stock</div>
+                <div class="stat-value" id="mostTraded">-</div>
+                <div class="stat-trend">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Volume Leader</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="transactions-table">
+            <table id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Stock</th>
+                        <th>Type</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Profit/Loss</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsBody">
+                    <!-- Transactions will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Pagination buttons will be added here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const transactionsBody = document.getElementById('transactionsBody');
+            const typeFilter = document.getElementById('typeFilter');
+            const timeFilter = document.getElementById('timeFilter');
+            const pagination = document.getElementById('pagination');
+            const itemsPerPage = 10;
+            let currentPage = 1;
+
+            // Load and display transactions
+            function loadTransactions() {
+                const transactions = JSON.parse(localStorage.getItem('tradeHistory') || '[]');
+                const filteredTransactions = filterTransactions(transactions);
+                displayTransactions(filteredTransactions);
+                updatePagination(filteredTransactions.length);
+                updatePortfolioValue();
+                updateStats();
+            }
+
+            // Filter transactions based on selected filters
+            function filterTransactions(transactions) {
+                return transactions.filter(transaction => {
+                    const typeMatch = typeFilter.value === 'all' || 
+                                    transaction.action === typeFilter.value;
+                    const date = new Date(transaction.date);
+                    const now = new Date();
+                    
+                    let timeMatch = true;
+                    switch(timeFilter.value) {
+                        case 'today':
+                            timeMatch = date.toDateString() === now.toDateString();
+                            break;
+                        case 'week':
+                            const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+                            timeMatch = date >= weekAgo;
+                            break;
+                        case 'month':
+                            timeMatch = date.getMonth() === now.getMonth() &&
+                                      date.getFullYear() === now.getFullYear();
+                            break;
+                        case 'year':
+                            timeMatch = date.getFullYear() === now.getFullYear();
+                            break;
+                    }
+                    
+                    return typeMatch && timeMatch;
+                }).sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+
+            // Display transactions with pagination
+            function displayTransactions(transactions) {
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                const pageTransactions = transactions.slice(start, end);
+
+                if (transactions.length === 0) {
+                    transactionsBody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="no-transactions">
+                                <i class="fas fa-history"></i>
+                                <p>No transactions found</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                transactionsBody.innerHTML = pageTransactions.map(transaction => `
+                    <tr>
+                        <td>${formatDate(transaction.date)}</td>
+                        <td>${transaction.symbol}</td>
+                        <td>
+                            <span class="transaction-type transaction-${transaction.action}">
+                                ${transaction.action.toUpperCase()}
+                            </span>
+                        </td>
+                        <td>${transaction.quantity}</td>
+                        <td>$${transaction.price.toFixed(2)}</td>
+                        <td>$${transaction.total.toFixed(2)}</td>
+                        <td class="transaction-${transaction.profit >= 0 ? 'profit' : 'loss'}">
+                            ${transaction.profit ? `${transaction.profit >= 0 ? '+' : ''}$${transaction.profit.toFixed(2)}` : '-'}
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Update pagination controls
+            function updatePagination(totalItems) {
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+                let paginationHTML = '';
+
+                if (totalPages > 1) {
+                    paginationHTML += `
+                        <button onclick="changePage(1)" ${currentPage === 1 ? 'disabled' : ''}>
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                    `;
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        paginationHTML += `
+                            <button onclick="changePage(${i})" 
+                                    class="${currentPage === i ? 'active' : ''}">
+                                ${i}
+                            </button>
+                        `;
+                    }
+
+                    paginationHTML += `
+                        <button onclick="changePage(${totalPages})" 
+                                ${currentPage === totalPages ? 'disabled' : ''}>
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                    `;
+                }
+
+                pagination.innerHTML = paginationHTML;
+            }
+
+            // Format date for display
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString() + ' ' + 
+                       date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            // Update portfolio value
+            function updatePortfolioValue() {
+                const portfolio = JSON.parse(localStorage.getItem('portfolio') || '[]');
+                const cash = parseFloat(localStorage.getItem('userCash') || '10000');
+                
+                let totalValue = cash;
+                portfolio.forEach(position => {
+                    totalValue += position.quantity * position.averagePrice;
+                });
+
+                document.getElementById('portfolioValue').textContent = 
+                    `$${totalValue.toFixed(2)}`;
+            }
+
+            // Update stats
+            function updateStats() {
+                const transactions = JSON.parse(localStorage.getItem('tradeHistory') || '[]');
+                
+                // Update total transactions
+                document.getElementById('totalTransactions').textContent = transactions.length;
+
+                // Calculate total profit/loss
+                const totalPL = transactions.reduce((sum, t) => sum + (t.profit || 0), 0);
+                document.getElementById('totalProfitLoss').textContent = 
+                    `${totalPL >= 0 ? '+' : ''}$${totalPL.toFixed(2)}`;
+                document.getElementById('totalProfitLoss').className = 
+                    `stat-value ${totalPL >= 0 ? 'transaction-profit' : 'transaction-loss'}`;
+
+                // Find most traded stock
+                const stockCounts = transactions.reduce((acc, t) => {
+                    acc[t.symbol] = (acc[t.symbol] || 0) + t.quantity;
+                    return acc;
+                }, {});
+                
+                const mostTraded = Object.entries(stockCounts)
+                    .sort(([,a], [,b]) => b - a)[0];
+                    
+                if (mostTraded) {
+                    document.getElementById('mostTraded').textContent = mostTraded[0];
+                }
+            }
+
+            // Event listeners for filters
+            typeFilter.addEventListener('change', () => {
+                currentPage = 1;
+                loadTransactions();
+            });
+
+            timeFilter.addEventListener('change', () => {
+                currentPage = 1;
+                loadTransactions();
+            });
+
+            // Change page function
+            window.changePage = function(page) {
+                currentPage = page;
+                loadTransactions();
+            };
+
+            // Initial load
+            loadTransactions();
+        });
+    </script>
+</body>
+</html> 

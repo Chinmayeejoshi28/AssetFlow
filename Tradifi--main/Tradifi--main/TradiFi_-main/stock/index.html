@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradiFi - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="Chatbot/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <header>
+            <div class="logo">
+                <h1>TradiFi</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Stock</a></li>
+                    <li><a href="/bonds/bonds.html">Bonds</a></li>
+                    <li><a href="/insurance/insurance.html">Insurance</a></li>
+                    <li><a href="/mutual_funds/mutual_funds.html">Mutual Funds</a></li>
+                </ul>
+            </nav>
+            <div class="user-info">
+                <div class="user-profile-menu">
+                    <a href="portfolio.html" class="profile-link">
+                        <div class="profile-avatar-wrapper">
+                            <div class="profile-avatar" id="headerProfileAvatar">
+                                <i class="fas fa-user-tie"></i>
+                                <div class="status-indicator"></div>
+                            </div>
+                            <div class="profile-dropdown">
+                                <span id="username">Yash</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="auth-buttons">
+                        </button>
+                        <button id="logoutBtn" class="auth-btn logout-btn" style="display: none;">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <!-- Market Summary Section -->
+            <div class="content-grid">
+                <div class="main-content">
+                    <section class="market-summary-section">
+                        <h2 class="section-title">Market Summary</h2>
+                        <div class="market-grid">
+                            <div class="market-box" id="sp500">
+                                <div class="market-header">
+                                    <h3>S&P 500</h3>
+                                    <span class="market-badge">US</span>
+                                </div>
+                                <div class="market-value">4,927.93</div>
+                                <div class="market-change positive">
+                                    <i class="fas fa-caret-up"></i>
+                                    <span>+25.61 (+0.52%)</span>
+                                </div>
+                                <div class="market-chart">
+                                    <canvas></canvas>
+                                </div>
+                            </div>
+
+                            <div class="market-box" id="nasdaq">
+                                <div class="market-header">
+                                    <h3>NASDAQ</h3>
+                                    <span class="market-badge">US</span>
+                                </div>
+                                <div class="market-value">15,628.95</div>
+                                <div class="market-change positive">
+                                    <i class="fas fa-caret-up"></i>
+                                    <span>+37.51 (+0.24%)</span>
+                                </div>
+                                <div class="market-chart">
+                                    <canvas></canvas>
+                                </div>
+                            </div>
+
+                            <div class="market-box" id="dowjones">
+                                <div class="market-header">
+                                    <h3>Dow Jones</h3>
+                                    <span class="market-badge">US</span>
+                                </div>
+                                <div class="market-value">38,726.33</div>
+                                <div class="market-change positive">
+                                    <i class="fas fa-caret-up"></i>
+                                    <span>+145.98 (+0.38%)</span>
+                                </div>
+                                <div class="market-chart">
+                                    <canvas></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Major Stocks Section -->
+                    <section class="stocks-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Major Stocks</h2>
+                            <div class="refresh-control">
+                                <span id="lastUpdated">Last updated: Just now</span>
+                                <button id="refreshStocks" class="refresh-btn">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="stocks-grid" id="majorStocks">
+                            <!-- Stock boxes will be populated here -->
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Trading Section -->
+                <!-- Recent Orders -->
+                <div class="recent-orders">
+                    <h3></h3>
+                    <div class="orders-list">
+                        <!-- Orders will be populated here -->
+                    </div>
+                </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal for login/signup -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="signup">Sign Up</button>
+            </div>
+            <div id="loginForm" class="auth-form">
+                <input type="email" placeholder="Email" id="loginEmail">
+                <input type="password" placeholder="Password" id="loginPassword">
+                <button id="loginSubmit">Login</button>
+            </div>
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <input type="text" placeholder="Name" id="signupName">
+                <input type="email" placeholder="Email" id="signupEmail">
+                <input type="password" placeholder="Password" id="signupPassword">
+                <button id="signupSubmit">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/stockAPI.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/major-stocks.js"></script>
+    <script src="js/trading.js"></script>
+    <script src="js/index.js"></script>
+
+
+    <!-- Chatbot Widget -->
+    <div class="chat-widget">
+        <button class="chat-toggle" id="chat-toggle">
+            <i class="fas fa-robot"></i>
+            <span class="notification-dot"></span>
+        </button>
+    </div>
+    <div class="chat-window" id="chat-window">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="bot-info">
+                    <div class="bot-avatar pulse">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="bot-name">
+                        <h2>Invaesto AI</h2>
+                        <div class="status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Online</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="minimize-button">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    <div class="message-bubble">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="typing-indicator">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            Hello! I'm your AI assistant. How can I help you today?
+                        </div>
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <textarea id="user-input" placeholder="Type your message..." rows="1"></textarea>
+                    <button id="send-button" class="primary-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="Chatbot/script.js"></script>
+
+</body>
+
+</html>

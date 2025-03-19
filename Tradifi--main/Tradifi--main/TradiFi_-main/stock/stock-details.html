@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockTrader - Stock Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <div class="logo">
+                <h1>StockTrader</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="portfolio.html">Portfolio</a></li>
+                    <li><a href="watchlist.html">Watchlist</a></li>
+                    <li><a href="trading.html">Trade</a></li>
+                </ul>
+            </nav>
+            <div class="user-info">
+                <span id="username">Guest User</span>
+                <button id="loginBtn">Login</button>
+                <button id="logoutBtn" style="display: none;">Logout</button>
+            </div>
+        </header>
+
+        <div class="stock-details-content">
+            <!-- Stock Header Information -->
+            <div class="stock-header">
+                <div id="stockHeaderInfo">
+                    <div class="stock-loading">Loading stock data...</div>
+                </div>
+                <div class="quick-actions">
+                    <button id="addToWatchlistBtn" class="action-btn">
+                        <i class="far fa-star"></i> Add to Watchlist
+                    </button>
+                    <button id="buyStockBtn" class="action-btn buy-btn">
+                        <i class="fas fa-shopping-cart"></i> Buy
+                    </button>
+                    <button id="sellStockBtn" class="action-btn sell-btn">
+                        <i class="fas fa-exchange-alt"></i> Sell
+                    </button>
+                </div>
+            </div>
+
+            <!-- Advanced Chart Section -->
+            <div class="advanced-chart-container">
+                <div class="chart-toolbar">
+                    <div class="chart-timeframes">
+                        <button class="time-btn active" data-range="1d">1D</button>
+                        <button class="time-btn" data-range="1w">1W</button>
+                        <button class="time-btn" data-range="1m">1M</button>
+                        <button class="time-btn" data-range="3m">3M</button>
+                        <button class="time-btn" data-range="6m">6M</button>
+                        <button class="time-btn" data-range="1y">1Y</button>
+                        <button class="time-btn" data-range="5y">5Y</button>
+                    </div>
+                    <div class="chart-types">
+                        <button class="chart-type-btn active" data-type="line">
+                            <i class="fas fa-chart-line"></i>
+                        </button>
+                        <button class="chart-type-btn" data-type="candle">
+                            <i class="fas fa-chart-bar"></i>
+                        </button>
+                        <button class="chart-type-btn" data-type="area">
+                            <i class="fas fa-chart-area"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="advancedChart" class="chart-display"></div>
+            </div>
+
+            <!-- Stock Information Grid -->
+            <div class="stock-info-grid">
+                <!-- Key Statistics -->
+                <div class="info-card">
+                    <h3>Key Statistics</h3>
+                    <div class="stats-grid" id="keyStats">
+                        <div class="stats-loading">Loading statistics...</div>
+                    </div>
+                </div>
+
+                <!-- Trading Panel -->
+                <div class="info-card trading-panel">
+                    <h3>Trade This Stock</h3>
+                    <div class="trade-tabs">
+                        <button class="trade-tab active" data-action="buy">Buy</button>
+                        <button class="trade-tab" data-action="sell">Sell</button>
+                    </div>
+                    
+                    <div class="trade-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tradeQuantity">Quantity</label>
+                                <input type="number" id="tradeQuantity" min="1" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="tradeType">Order Type</label>
+                                <select id="tradeType">
+                                    <option value="market">Market</option>
+                                    <option value="limit">Limit</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="limitPriceGroup" style="display: none;">
+                            <label for="limitPrice">Limit Price ($)</label>
+                            <input type="number" id="limitPrice" step="0.01">
+                        </div>
+                        
+                        <div class="trade-summary">
+                            <div class="summary-item">
+                                <span>Current Price:</span>
+                                <span id="tradingCurrentPrice">$0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Estimated Cost:</span>
+                                <span id="estimatedCost">$0.00</span>
+                            </div>
+                            <div class="summary-item" id="availableCashItem">
+                                <span>Available Cash:</span>
+                                <span id="availableCash">$0.00</span>
+                            </div>
+                            <div class="summary-item" id="availableSharesItem" style="display: none;">
+                                <span>Available Shares:</span>
+                                <span id="availableShares">0</span>
+                            </div>
+                        </div>
+                        
+                        <button id="executeTrade" class="trade-execute-btn">Place Order</button>
+                    </div>
+                </div>
+
+                <!-- Company Information -->
+                <div class="info-card">
+                    <h3>About the Company</h3>
+                    <div id="companyInfo">
+                        <div class="company-loading">Loading company information...</div>
+                    </div>
+                </div>
+
+                <!-- Technical Indicators -->
+                <div class="info-card">
+                    <h3>Technical Indicators</h3>
+                    <div class="indicators-grid" id="technicalIndicators">
+                        <div class="indicators-loading">Loading indicators...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News and Recent Activity -->
+            <div class="stock-news-section">
+                <h3>Latest News & Analysis</h3>
+                <div id="stockNewsContainer">
+                    <div class="news-loading">Loading news...</div>
+                </div>
+            </div>
+
+            <!-- Trade History for this Stock -->
+            <div class="stock-trade-history">
+                <h3>Your Trade History</h3>
+                <div id="noTradeHistory" style="display: none;">
+                    <p>You haven't made any trades for this stock yet.</p>
+                </div>
+                <table id="tradeHistoryTable" class="trade-history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tradeHistoryBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Order Confirmation</h3>
+            <div id="orderDetails" class="order-details"></div>
+            <div class="modal-actions">
+                <button id="cancelOrder" class="cancel-btn">Cancel</button>
+                <button id="confirmOrder" class="confirm-btn">Confirm Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trade Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h3>Order Executed Successfully!</h3>
+            <div id="successDetails" class="success-details"></div>
+            <div class="modal-actions">
+                <button id="viewPortfolio" class="action-btn">View Portfolio</button>
+                <button id="closeSuccess" class="action-btn">Continue Trading</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal (reused from index) -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="signup">Sign Up</button>
+            </div>
+            <div id="loginForm" class="auth-form">
+                <input type="email" placeholder="Email" id="loginEmail">
+                <input type="password" placeholder="Password" id="loginPassword">
+                <button id="loginSubmit">Login</button>
+            </div>
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <input type="text" placeholder="Name" id="signupName">
+                <input type="email" placeholder="Email" id="signupEmail">
+                <input type="password" placeholder="Password" id="signupPassword">
+                <button id="signupSubmit">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/stockAPI.js"></script>
+    <script src="js/portfolio.js"></script>
+    <script src="js/stock-details.js"></script>
+</body>
+</html>
